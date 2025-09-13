@@ -26,7 +26,7 @@ const Landing: React.FC = () => {
   const handleLogin = (email: string, password: string) => {
     console.log("Login attempt:", { email, password, type: showLogin });
     setShowLogin(null);
-    window.location.href = showLogin === "student" ? "/dashboard" : "/teacher";
+    // Navigation will be handled by auth state change
   };
 
   const handleShopButtonClick = () => {
@@ -463,7 +463,6 @@ const Landing: React.FC = () => {
       {showLogin && (
         <LoginForm
           type={showLogin}
-          onLogin={handleLogin}
           onClose={() => setShowLogin(null)}
         />
       )}

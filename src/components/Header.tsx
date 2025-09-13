@@ -13,12 +13,13 @@ import {
   Menu,
 } from "lucide-react";
 import { useStudent } from "../contexts/StudentContext";
+import { useAuth } from "../contexts/AuthContext";
 import MobileMenu from "./MobileMenu";
 import SoundPlayer from "../utils/sounds";
 
 const Header: React.FC = () => {
   const location = useLocation();
-  const { currentStudent } = useStudent();
+  const { signOut, userProfile, studentProfile } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigation = [
@@ -35,6 +36,14 @@ const Header: React.FC = () => {
   const handleNavHover = () => {
     SoundPlayer.play("tabSwitch");
   };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  if (!userProfile || !studentProfile) {
+    return null;
+  }
 
   return (
     <>
@@ -79,19 +88,26 @@ const Header: React.FC = () => {
               <div className="flex items-center space-x-2 bg-[#F8D991]/20 backdrop-blur-sm px-3 py-1 rounded-full border border-[#F8D991]/30">
                 <div className="w-2 h-2 bg-[#F8D991] rounded-full animate-pulse"></div>
                 <span className="text-[#F8D991] font-semibold">
-                  {currentStudent.ecoPoints} Points
+                  {studentProfile.eco_points} Points
                 </span>
               </div>
               <div className="hidden md:flex items-center space-x-2">
                 <img
-                  src={currentStudent.avatar}
-                  alt={currentStudent.name}
+                  src={userProfile.avatar_url || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'}
+                  alt={userProfile.full_name}
                   className="w-8 h-8 rounded-full border-2 border-[#F8D991]"
                 />
                 <span className="text-gray-200 font-medium">
-                  {currentStudent.name}
+                  {userProfile.full_name}
                 </span>
               </div>
+              
+              <button
+                onClick={handleSignOut}
+                className="hidden md:block text-white/70 hover:text-[#E1664C] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E1664C] rounded px-2 py-1 text-sm"
+              >
+                Sign Out
+              </button>
 
               {/* Mobile Menu Button */}
               <button
